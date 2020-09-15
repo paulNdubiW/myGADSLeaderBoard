@@ -104,7 +104,7 @@ public class FormSubmission extends AppCompatActivity {
             @Override
             public void onFailure(Call<Void> request, Throwable t) {
                 issueFailureDialog();
-                Log.d(SERVICE_REQUEST, "Response: ", t);
+                Log.d(SERVICE_REQUEST, "Debug Message: ", t);
             }
         });
     }
