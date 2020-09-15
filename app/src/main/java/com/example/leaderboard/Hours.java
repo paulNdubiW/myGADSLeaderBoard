@@ -12,4 +12,36 @@ public class Hours {
         mHours = hours;
         mCountry = country;
     }
+
+    public void setId(String id) {
+        mId = id;
+    }
+
+    public void setName(String name) {
+        mName = name;
+    }
+
+    public void setHours(String hours) {
+        mHours = hours;
+    }
+
+    public void setCountry(String country) {
+        mCountry = country;
+    }
+
+    public String getId() {
+        return mId;
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public String getHours() {
+        return mHours;
+    }
+
+    public String getCountry() {
+        return mCountry;
+    }
 }

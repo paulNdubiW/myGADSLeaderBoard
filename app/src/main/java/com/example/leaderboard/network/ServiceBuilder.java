@@ -4,7 +4,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceBuilder {
-    public static final String BASE_URL = "https://docs.google.com/forms/d/e";
+    public static final String BASE_URL = "https://docs.google.com/forms/d/e/";
 
    private static Retrofit retrofit = new Retrofit.Builder()
 

@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.InsetDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -22,12 +23,14 @@ import retrofit2.Response;
 
 public class FormSubmission extends AppCompatActivity {
 
+    public static final String SERVICE_REQUEST = "Service Request";
     private ImageButton mBackArrow;
     private EditText mFirstName;
     private EditText mLastName;
     private EditText mEmailAddress;
     private EditText mLinkToProject;
     private Button mSubmit;
+    private WarningDialog mDialogWarning;
 
 
     @Override
@@ -61,45 +64,47 @@ public class FormSubmission extends AppCompatActivity {
     }
 
     private void issueWarningDialog() {
-        WarningDialog dialogWarning = new WarningDialog(FormSubmission.this);
-        Button proceed = dialogWarning.findViewById(R.id.warning_button);
+        mDialogWarning = new WarningDialog(FormSubmission.this);
+        Button proceed = mDialogWarning.findViewById(R.id.warning_button);
         proceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 makeServiceRequest();
+                mDialogWarning.dismiss();
             }
         });
 
         ColorDrawable back = new ColorDrawable(Color.TRANSPARENT);
         InsetDrawable inset = new InsetDrawable(back, 40);
-        dialogWarning.show();
-        dialogWarning.setCanceledOnTouchOutside(false);
+        mDialogWarning.show();
+        mDialogWarning.setCanceledOnTouchOutside(false);
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-        layoutParams.copyFrom(dialogWarning.getWindow().getAttributes());
+        layoutParams.copyFrom(mDialogWarning.getWindow().getAttributes());
         layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        dialogWarning.getWindow().setAttributes(layoutParams);
-        dialogWarning.getWindow().setBackgroundDrawable(inset);
+        mDialogWarning.getWindow().setAttributes(layoutParams);
+        mDialogWarning.getWindow().setBackgroundDrawable(inset);
     }
 
     private void makeServiceRequest() {
         ServiceRequest serviceRequest = ServiceBuilder.buildService(ServiceRequest.class);
-        Call<Project> postRequest = serviceRequest.submitProject(
+        Call<Void> postRequest = serviceRequest.submitProject(
                 mFirstName.getText().toString(),
                 mLastName.getText().toString(),
                 mEmailAddress.getText().toString(),
                 mLinkToProject.getText().toString()
         );
 
-        postRequest.enqueue(new Callback<Project>() {
+        postRequest.enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(Call<Project> request, Response<Project> response) {
+            public void onResponse(Call<Void> request, Response<Void> response) {
                 issueSuccessDialog();
             }
 
             @Override
-            public void onFailure(Call<Project> request, Throwable t) {
+            public void onFailure(Call<Void> request, Throwable t) {
                 issueFailureDialog();
+                Log.d(SERVICE_REQUEST, "Response: ", t);
             }
         });
     }
